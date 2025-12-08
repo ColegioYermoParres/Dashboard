@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Docente - Maestros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+        }
+        .sidebar {
+            width: 170px;
+            background-color: #1a5c0f;
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar-header {
+            padding: 15px;
+            background-color: #0d4008;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.85em;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .main-content {
+            flex: 1;
+        }
+        .header {
+            background-color: #2d7a1f;
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1em;
+        }
+        .header-title {
+            font-weight: bold;
+        }
+        .user-info {
+            font-size: 0.85em;
+        }
+        .content-area {
+            padding: 20px 25px;
+            max-width: 1200px;
+        }
+        .function-card {
+            background-color: white;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid #f4c430;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .function-card:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transform: translateX(3px);
+        }
+        .function-card.verde {
+            border-left: 4px solid #2d7a1f;
+        }
+        .function-card.azul {
+            border-left: 4px solid #3498db;
+        }
+        .function-card.naranja {
+            border-left: 4px solid #ff8c42;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .card-category {
+            color: #1a5c0f;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .card-time {
+            color: #999;
+            font-size: 0.75em;
+        }
+        .card-title {
+            color: #000;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .card-description {
+            color: #666;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+        .btn-action {
+            background-color: #2d7a1f;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .btn-action:hover {
+            background-color: #1a5c0f;
+        }
+        .btn-action.amarillo {
+            background-color: #f4c430;
+            color: #333;
+        }
+        .btn-action.amarillo:hover {
+            background-color: #e0b020;
+        }
+        .btn-action.azul {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-action.azul:hover {
+            background-color: #2980b9;
+        }
+        .btn-action.naranja {
+            background-color: #ff8c42;
+            color: white;
+        }
+        .btn-action.naranja:hover {
+            background-color: #ff6b1a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            background-color: #2d7a1f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header.naranja {
+            background-color: #ff8c42;
+        }
+        .modal-header h2 {
+            font-size: 1.2em;
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .acciones-horario {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .btn-agregar {
+            background-color: #2d7a1f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin: 0;
+        }
+        .btn-agregar:hover {
+            background-color: #1a5c0f;
+        }
+        .btn-secundario {
+            background-color: #f4c430;
+            color: #333;
+        }
+        .btn-secundario:hover {
+            background-color: #e0b020;
+        }
+        .solicitud-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff8c42;
+            transition: all 0.2s;
+        }
+        .solicitud-card:hover {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .solicitud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .solicitud-nombre {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1em;
+        }
+        .badge-estado {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+        .badge-pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .badge-revision {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+        .badge-aprobado {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        .badge-rechazado {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        .solicitud-info {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        .solicitud-acciones {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-pequeño {
+            padding: 5px 12px;
+            font-size: 0.8em;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-pequeño:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .expediente-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #ff8c42;
+        }
+        .expediente-section h3 {
+            color: #2c3e50;
+            font-size: 1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .expediente-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .expediente-label {
+            font-weight: bold;
+            min-width: 150px;
+            color: #555;
+        }
+        .expediente-value {
+            color: #333;
+        }
+        .documentos-list {
+            list-style: none;
+            padding: 0;
+        }
+        .documentos-list li {
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: white;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .doc-nombre {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .doc-estado {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+        .doc-completo {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        .doc-pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .comentarios-box {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .filtros-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .filtros-container.active {
+            display: block;
+        }
+        .filtro-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .filtro-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        .filtro-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #555;
+        }
+        .filtro-item select,
+        .filtro-item input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .estadisticas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .stat-card.naranja {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .stat-card.verde {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stat-card.azul {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .stat-numero {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .notificacion {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #27ae60;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        .notificacion.active {
+            display: block;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">Yermo y Parres</div>
+        <div class="menu-item">Bandeja de Entrada</div>
+        <div class="menu-item">Enviados</div>
+        <div class="menu-item">Comunicados Generales</div>
+        <div class="menu-item">Configuración</div>
+        <div class="menu-item">Cerrar Sesión</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">Funciones del Portal Docente</div>
+            <div class="user-info">Bienvenido, Sr. Pérez</div>
+        </div>
+
+        <div class="content-area">
+            <div class="function-card verde" onclick="alert('Función en desarrollo')">
+                <div class="card-header">
+                    <div class="card-category">Gestión Académica</div>
+                    <div class="card-time">Actualizado</div>
+                </div>
+                <div class="card-title">Organización de horarios</div>
+                <div class="card-description">Gestiona y organiza tu horario de clases de manera eficiente con planificación mejorada</div>
+                <button class="btn-action" onclick="event.stopPropagation(); alert('Abriendo horarios...')">Abrir</button>
+            </div>
+
+            <div class="function-card azul" onclick="alert('Función en desarrollo')">
+                <div class="card-header">
+                    <div class="card-category">Comunicación Institucional</div>
+                    <div class="card-time">3 nuevas</div>
+                </div>
+                <div class="card-title">Circulares y Avisos</div>
+                <div class="card-description">Consulta circulares oficiales, avisos institucionales y comunicados importantes</div>
+                <button class="btn-action azul" onclick="event.stopPropagation(); alert('Abriendo circulares...')">Ver circulares</button>
+            </div>
+
+            <div class="function-card naranja" onclick="abrirAdmisiones()">
+                <div class="card-header">
+                    <div class="card-category">Proceso de Admisión</div>
+                    <div class="card-time">8 pendientes</div>
+                </div>
+                <div class="card-title">Solicitudes de Admisión</div>
+                <div class="card-description">Revisa y evalúa solicitudes de nuevos estudiantes para el próximo ciclo escolar</div>
+                <button class="btn-action naranja" onclick="event.stopPropagation(); abrirAdmisiones()">Revisar solicitudes</button>
+            </div>
+
+            <div class="function-card verde" onclick="alert('Función en desarrollo')">
+                <div class="card-header">
+                    <div class="card-category">Recursos Multimedia</div>
+                    <div class="card-time">Disponible</div>
+                </div>
+                <div class="card-title">Videos de apoyo educativo</div>
+                <div class="card-description">Comparte videos didácticos y material de apoyo con tus estudiantes</div>
+                <button class="btn-action" onclick="event.stopPropagation(); alert('Subiendo video...')">Subir video</button>
+            </div>
+
+            <div class="function-card verde" onclick="alert('Función en desarrollo')">
+                <div class="card-header">
+                    <div class="card-category">Evaluaciones</div>
+                    <div class="card-time">Activo</div>
+                </div>
+                <div class="card-title">Publicación de resultados</div>
+                <div class="card-description">Publica calificaciones de exámenes y pruebas de forma rápida y segura</div>
+                <button class="btn-action" onclick="event.stopPropagation(); alert('Publicando resultados...')">Publicar</button>
+            </div>
+
+            <div class="function-card" onclick="alert('Función en desarrollo')">
+                <div class="card-header">
+                    <div class="card-category">Biblioteca Digital</div>
+                    <div class="card-time">Activo</div>
+                </div>
+                <div class="card-title">Búsqueda avanzada de libros</div>
+                <div class="card-description">Busca y filtra libros por título, autor, categoría o ISBN con disponibilidad en tiempo real</div>
+                <button class="btn-action amarillo" onclick="event.stopPropagation(); alert('Buscando libros...')">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalAdmisiones" class="modal">
+        <div class="modal-content">
+            <div class="modal-header naranja">
+                <h2>📋 Solicitudes de Admisión - Ciclo 2026</h2>
+                <button class="btn-close" onclick="cerrarAdmisiones()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="acciones-horario">
+                    <button class="btn-agregar" style="background-color: #ff8c42;" onclick="toggleFiltros()">🔍 Filtrar</button>
+                    <button class="btn-agregar btn-secundario" onclick="exportarSolicitudes()">📥 Exportar Excel</button>
+                    <button class="btn-agregar btn-secundario" onclick="mostrarEstadisticas()">📊 Estadísticas</button>
+                </div>
+
+                <div id="filtrosContainer" class="filtros-container">
+                    <h3 style="margin-bottom: 10px;">Filtros de búsqueda</h3>
+                    <div class="filtro-row">
+                        <div class="filtro-item">
+                            <label>Estado:</label>
+                            <select id="filtroEstado" onchange="aplicarFiltros()">
+                                <option value="todos">Todos</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="revision">En Revisión</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+                        <div class="filtro-item">
+                            <label>Grado:</label>
+                            <select id="filtroGrado" onchange="aplicarFiltros()">
+                                <option value="todos">Todos</option>
+                                <option value="1">1° Secundaria</option>
+                                <option value="2">2° Secundaria</option>
+                                <option value="3">3° Secundaria</option>
+                            </select>
+                        </div>
+                        <div class="filtro-item">
+                            <label>Búsqueda:</label>
+                            <input type="text" id="filtroBusqueda" placeholder="Nombre del estudiante..." onkeyup="aplicarFiltros()">
+                        </div>
+                    </div>
+                    <button class="btn-agregar btn-secundario" onclick="limpiarFiltros()">Limpiar filtros</button>
+                </div>
+
+                <div id="estadisticasContainer" style="display: none;">
+                    <h3 style="margin-bottom: 15px;">Estadísticas de Admisiones</h3>
+                    <div class="estadisticas-grid">
+                        <div class="stat-card naranja">
+                            <div class="stat-numero">8</div>
+                            <div class="stat-label">Total Solicitudes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-numero">5</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-card verde">
+                            <div class="stat-numero">2</div>
+                            <div class="stat-label">Aprobadas</div>
+                        </div>
+                        <div class="stat-card azul">
+                            <div class="stat-numero">8.9</div>
+                            <div class="stat-label">Promedio General</div>
+                        </div>
+                    </div>
+                    <button class="btn-agregar btn-secundario" onclick="ocultarEstadisticas()">Cerrar estadísticas</button>
+                </div>
+
+                <div id="listaSolicitudes">
+                    <div class="solicitud-card" data-estado="pendiente" data-grado="1">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Ana María González Pérez</div>
+                            <span class="badge-estado badge-pendiente">Pendiente</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 1° Secundaria | <strong>Fecha:</strong> 05 Dic 2025 | <strong>Promedio:</strong> 9.2
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> ana.gonzalez@email.com | Tel: 555-1234-5678
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-001', 'Ana María González Pérez')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="revision" data-grado="3">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Carlos Alberto Ramírez López</div>
+                            <span class="badge-estado badge-revision">En Revisión</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 3° Secundaria | <strong>Fecha:</strong> 04 Dic 2025 | <strong>Promedio:</strong> 8.8
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> carlos.ramirez@email.com | Tel: 555-9876-5432
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-002', 'Carlos Alberto Ramírez López')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="pendiente" data-grado="2">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">María José Hernández Cruz</div>
+                            <span class="badge-estado badge-pendiente">Pendiente</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 2° Secundaria | <strong>Fecha:</strong> 03 Dic 2025 | <strong>Promedio:</strong> 9.5
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> maria.hernandez@email.com | Tel: 555-2468-1357
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-003', 'María José Hernández Cruz')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="aprobado" data-grado="1">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Luis Fernando Torres Sánchez</div>
+                            <span class="badge-estado badge-aprobado">Aprobado</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 1° Secundaria | <strong>Fecha:</strong> 02 Dic 2025 | <strong>Promedio:</strong> 9.0
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> luis.torres@email.com | Tel: 555-3691-2580
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-004', 'Luis Fernando Torres Sánchez')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="pendiente" data-grado="3">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Sofía Valentina Morales Díaz</div>
+                            <span class="badge-estado badge-pendiente">Pendiente</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 3° Secundaria | <strong>Fecha:</strong> 01 Dic 2025 | <strong>Promedio:</strong> 8.7
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> sofia.morales@email.com | Tel: 555-7890-1234
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-005', 'Sofía Valentina Morales Díaz')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="aprobado" data-grado="2">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Diego Alejandro Castillo Ruiz</div>
+                            <span class="badge-estado badge-aprobado">Aprobado</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 2° Secundaria | <strong>Fecha:</strong> 30 Nov 2025 | <strong>Promedio:</strong> 9.3
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> diego.castillo@email.com | Tel: 555-4567-8901
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-006', 'Diego Alejandro Castillo Ruiz')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="revision" data-grado="1">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Isabella Fernanda López Méndez</div>
+                            <span class="badge-estado badge-revision">En Revisión</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 1° Secundaria | <strong>Fecha:</strong> 29 Nov 2025 | <strong>Promedio:</strong> 8.5
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> isabella.lopez@email.com | Tel: 555-6543-2109
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-007', 'Isabella Fernanda López Méndez')">📄 Expediente</button>
+                        </div>
+                    </div>
+
+                    <div class="solicitud-card" data-estado="pendiente" data-grado="2">
+                        <div class="solicitud-header">
+                            <div class="solicitud-nombre">Emilio José Vargas Ortiz</div>
+                            <span class="badge-estado badge-pendiente">Pendiente</span>
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Grado solicitado:</strong> 2° Secundaria | <strong>Fecha:</strong> 28 Nov 2025 | <strong>Promedio:</strong> 8.9
+                        </div>
+                        <div class="solicitud-info">
+                            <strong>Contacto:</strong> emilio.vargas@email.com | Tel: 555-9876-5432
+                        </div>
+                        <div class="solicitud-acciones">
+                            <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="cambiarEstado(this, 'revision')">📝 En Revisión</button>
+                            <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="cambiarEstado(this, 'aprobado')">✓ Aprobar</button>
+                            <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="cambiarEstado(this, 'rechazado')">✗ Rechazar</button>
+                            <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-008', 'Emilio José Vargas Ortiz')">📄 Expediente</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalExpediente" class="modal">
+        <div class="modal-content">
+            <div class="modal-header naranja">
+                <h2 id="tituloExpediente">📄 Expediente del Estudiante</h2>
+                <button class="btn-close" onclick="cerrarExpediente()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="expediente-section">
+                    <h3>👤 Información Personal</h3>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Nombre completo:</span>
+                        <span class="expediente-value" id="expNombre">Ana María González Pérez</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Fecha de nacimiento:</span>
+                        <span class="expediente-value">15 de marzo de 2012</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">CURP:</span>
+                        <span class="expediente-value">GOPA120315MDFNRN07</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Dirección:</span>
+                        <span class="expediente-value">Calle Principal #123, Col. Centro, Bogotá</span>
+                    </div>
+                </div>
+
+                <div class="expediente-section">
+                    <h3>👨‍👩‍👧 Información de Padres/Tutores</h3>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Padre:</span>
+                        <span class="expediente-value">Jorge González Martínez</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Ocupación:</span>
+                        <span class="expediente-value">Ingeniero Civil</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Madre:</span>
+                        <span class="expediente-value">Patricia Pérez Rodríguez</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Ocupación:</span>
+                        <span class="expediente-value">Médico</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Tel. contacto:</span>
+                        <span class="expediente-value">555-1234-5678 / 555-8765-4321</span>
+                    </div>
+                </div>
+
+                <div class="expediente-section">
+                    <h3>📋 Documentos Requeridos</h3>
+                    <ul class="documentos-list">
+                        <li>
+                            <span class="doc-nombre">📄 Acta de nacimiento</span>
+                            <span class="doc-estado doc-completo">✓ Completo</span>
+                        </li>
+                        <li>
+                            <span class="doc-nombre">📄 CURP</span>
+                            <span class="doc-estado doc-completo">✓ Completo</span>
+                        </li>
+                        <li>
+                            <span class="doc-nombre">📄 Certificado de primaria</span>
+                            <span class="doc-estado doc-completo">✓ Completo</span>
+                        </li>
+                        <li>
+                            <span class="doc-nombre">📄 Comprobante de domicilio</span>
+                            <span class="doc-estado doc-completo">✓ Completo</span>
+                        </li>
+                        <li>
+                            <span class="doc-nombre">📄 Carta de buena conducta</span>
+                            <span class="doc-estado doc-pendiente">⏳ Pendiente</span>
+                        </li>
+                        <li>
+                            <span class="doc-nombre">📄 Fotografías tamaño infantil</span>
+                            <span class="doc-estado doc-completo">✓ Completo</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="expediente-section">
+                    <h3>📚 Información Académica</h3>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Escuela de procedencia:</span>
+                        <span class="expediente-value">Escuela Primaria "Benito Juárez"</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Promedio general:</span>
+                        <span class="expediente-value">9.2</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Materias destacadas:</span>
+                        <span class="expediente-value">Matemáticas (9.8), Español (9.5), Ciencias (9.6)</span>
+                    </div>
+                    <div class="expediente-row">
+                        <span class="expediente-label">Actividades extracurriculares:</span>
+                        <span class="expediente-value">Banda escolar, Club de lectura</span>
+                    </div>
+                </div>
+
+                <div class="expediente-section">
+                    <h3>💬 Comentarios y Observaciones</h3>
+                    <textarea class="comentarios-box" placeholder="Agregar comentarios sobre la solicitud...">Estudiante con excelente promedio académico. Muestra interés en las actividades artísticas y culturales. Recomendada por su maestra de primaria.</textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn-agregar" style="background-color: #27ae60;" onclick="guardarComentarios()">💾 Guardar comentarios</button>
+                    <button class="btn-agregar" style="background-color: #3498db;" onclick="imprimirExpediente()">🖨️ Imprimir expediente</button>
+                    <button class="btn-agregar btn-secundario" onclick="cerrarExpediente()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificacion" class="notificacion"></div>
+
+    <script>
+        function abrirAdmisiones() {
+            document.getElementById('modalAdmisiones').classList.add('active');
+        }
+
+        function cerrarAdmisiones() {
+            document.getElementById('modalAdmisiones').classList.remove('active');
+        }
+
+        function toggleFiltros() {
+            const filtros = document.getElementById('filtrosContainer');
+            filtros.classList.toggle('active');
+        }
+
+        function aplicarFiltros() {
+            const estado = document.getElementById('filtroEstado').value;
+            const grado = document.getElementById('filtroGrado').value;
+            const busqueda = document.getElementById('filtroBusqueda').value.toLowerCase();
+            const solicitudes = document.querySelectorAll('.solicitud-card');
+
+            solicitudes.forEach(card => {
+                const cardEstado = card.dataset.estado;
+                const cardGrado = card.dataset.grado;
+                const cardNombre = card.querySelector('.solicitud-nombre').textContent.toLowerCase();
+
+                let mostrar = true;
+
+                if (estado !== 'todos' && cardEstado !== estado) {
+                    mostrar = false;
+                }
+
+                if (grado !== 'todos' && cardGrado !== grado) {
+                    mostrar = false;
+                }
+
+                if (busqueda && !cardNombre.includes(busqueda)) {
+                    mostrar = false;
+                }
+
+                card.style.display = mostrar ? 'block' : 'none';
+            });
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filtroEstado').value = 'todos';
+            document.getElementById('filtroGrado').value = 'todos';
+            document.getElementById('filtroBusqueda').value = '';
+            aplicarFiltros();
+        }
+
+        function mostrarEstadisticas() {
+            document.getElementById('estadisticasContainer').style.display = 'block';
+        }
+
+        function ocultarEstadisticas() {
+            document.getElementById('estadisticasContainer').style.display = 'none';
+        }
+
+        function cambiarEstado(btn, nuevoEstado) {
+            const card = btn.closest('.solicitud-card');
+            const badgeEstado = card.querySelector('.badge-estado');
+            
+            card.dataset.estado = nuevoEstado;
+            
+            badgeEstado.className = 'badge-estado';
+            
+            switch(nuevoEstado) {
+                case 'pendiente':
+                    badgeEstado.classList.add('badge-pendiente');
+                    badgeEstado.textContent = 'Pendiente';
+                    break;
+                case 'revision':
+                    badgeEstado.classList.add('badge-revision');
+                    badgeEstado.textContent = 'En Revisión';
+                    break;
+                case 'aprobado':
+                    badgeEstado.classList.add('badge-aprobado');
+                    badgeEstado.textContent = 'Aprobado';
+                    break;
+                case 'rechazado':
+                    badgeEstado.classList.add('badge-rechazado');
+                    badgeEstado.textContent = 'Rechazado';
+                    break;
+            }
+            
+            mostrarNotificacion('Estado actualizado correctamente');
+        }
+
+        function verExpediente(id, nombre) {
+            document.getElementById('expNombre').textContent = nombre;
+            document.getElementById('tituloExpediente').textContent = '📄 Expediente - ' + id;
+            document.getElementById('modalExpediente').classList.add('active');
+        }
+
+        function cerrarExpediente() {
+            document.getElementById('modalExpediente').classList.remove('active');
+        }
+
+        function guardarComentarios() {
+            mostrarNotificacion('Comentarios guardados exitosamente');
+        }
+
+        function imprimirExpediente() {
+            mostrarNotificacion('Generando expediente para impresión...');
+        }
+
+        function exportarSolicitudes() {
+            mostrarNotificacion('Exportando solicitudes a Excel...');
+        }
+
+        function mostrarNotificacion(mensaje) {
+            const notif = document.getElementById('notificacion');
+            notif.textContent = mensaje;
+            notif.classList.add('active');
+            
+            setTimeout(function() {
+                notif.classList.remove('active');
+            }, 3000);
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<html>
+    <head>
+       <meta charset="UTF-8">
+       <title>Registro</title>
+
+<style>
+    body {
+        background: #bfe5c8; /* verde suave de fondo */
+        font-family: Arial;
+    }
+
+    .caja {
+        width: 450px;
+        background: white;
+        padding: 20px 25px;
+        margin: 40px auto;
+        border: 1px solid #ccc;
+    }
+
+    h2 {
+        color: #e6b800; /* amarillo */
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    .fila {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+    }
+
+    .texto-ayuda {
+        font-size: 12px;
+        color: #444;
+        margin-top: 5px;
+    }
+
+    .abajo {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    a {
+        color: #367af6;
+        text-decoration: none;
+        font-weight: bold;
+    }
+</style>
+    </head>
+
+    <body>
+
+   <div class="caja">
+
+    <h2>Registro</h2>
+
+    <!-- fila nombres y apellidos -->
+    <div class="fila">
+        <div style="flex:1;">
+            <label>Nombres</label>
+            <input type="text" placeholder="Ingrese su nombre">
+        </div>
+
+        <div style="flex:1;">
+            <label>Apellidos</label>
+            <input type="text" placeholder="Introduce tu apellido">
+        </div>
+    </div>
+
+    <label>Dirección de correo electrónico*</label>
+    <input type="email" placeholder="Introduzca su dirección de correo electrónico">
+
+    <br><br>
+
+    <label>Número de teléfono*</label>
+    <input type="text" placeholder="Número de teléfono">
+
+    <br><br>
+
+    <label>Crear contraseña*</label>
+    <input type="password" placeholder="Crea una contraseña segura">
+    <div class="texto-ayuda">
+        La contraseña debe tener mínimo 8 caracteres con letras, números y caracteres especiales.
+    </div>
+
+    <br>
+
+    <label>Confirmar contraseña*</label>
+    <input type="password" placeholder="Confirma tu contraseña">
+
+    <div class="abajo">
+        ¿Ya tienes una cuenta? <a href="#">Iniciar sesión</a>
+    </div>
+
+       </div>
+
+    </body>
+</html>

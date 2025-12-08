@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Docente - Maestros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+        }
+        .sidebar {
+            width: 170px;
+            background-color: #1a5c0f;
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar-header {
+            padding: 15px;
+            background-color: #0d4008;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.85em;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .main-content {
+            flex: 1;
+        }
+        .header {
+            background-color: #2d7a1f;
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1em;
+        }
+        .header-title {
+            font-weight: bold;
+        }
+        .user-info {
+            font-size: 0.85em;
+        }
+        .content-area {
+            padding: 20px 25px;
+            max-width: 1200px;
+        }
+        .function-card {
+            background-color: white;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid #f4c430;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .function-card:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transform: translateX(3px);
+        }
+        .function-card.verde {
+            border-left: 4px solid #2d7a1f;
+        }
+        .function-card.azul {
+            border-left: 4px solid #3498db;
+        }
+        .function-card.naranja {
+            border-left: 4px solid #ff8c42;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .card-category {
+            color: #1a5c0f;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .card-time {
+            color: #999;
+            font-size: 0.75em;
+        }
+        .card-title {
+            color: #000;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        .card-description {
+            color: #666;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+        .btn-action {
+            background-color: #2d7a1f;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .btn-action:hover {
+            background-color: #1a5c0f;
+        }
+        .btn-action.amarillo {
+            background-color: #f4c430;
+            color: #333;
+        }
+        .btn-action.amarillo:hover {
+            background-color: #e0b020;
+        }
+        .btn-action.azul {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-action.azul:hover {
+            background-color: #2980b9;
+        }
+        .btn-action.naranja {
+            background-color: #ff8c42;
+            color: white;
+        }
+        .btn-action.naranja:hover {
+            background-color: #ff6b1a;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            background-color: #2d7a1f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header.azul {
+            background-color: #3498db;
+        }
+        .modal-header.naranja {
+            background-color: #ff8c42;
+        }
+        .modal-header h2 {
+            font-size: 1.2em;
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .horario-container {
+            overflow-x: auto;
+        }
+        .horario-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .horario-table th {
+            background-color: #2d7a1f;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .horario-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.85em;
+            min-width: 100px;
+            height: 60px;
+        }
+        .horario-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .clase {
+            background-color: #e8f5e3;
+            border: 2px solid #2d7a1f;
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .clase:hover {
+            background-color: #d0eac5;
+            transform: scale(1.05);
+        }
+        .clase-nombre {
+            font-weight: bold;
+            color: #1a5c0f;
+            font-size: 0.9em;
+        }
+        .clase-grupo {
+            color: #666;
+            font-size: 0.75em;
+        }
+        .btn-agregar {
+            background-color: #2d7a1f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin: 10px 5px;
+        }
+        .btn-agregar:hover {
+            background-color: #1a5c0f;
+        }
+        .btn-secundario {
+            background-color: #f4c430;
+            color: #333;
+        }
+        .btn-secundario:hover {
+            background-color: #e0b020;
+        }
+        .acciones-horario {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        /* Circulares */
+        .circular-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+        .circular-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .circular-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .circular-fecha {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        .circular-titulo {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        .circular-contenido {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .circular-acciones {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-pequeño {
+            padding: 5px 12px;
+            font-size: 0.8em;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Admisiones */
+        .solicitud-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff8c42;
+        }
+        .solicitud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .solicitud-nombre {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1em;
+        }
+        .badge-estado {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+        .badge-pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .badge-revision {
+            background-color: #cfe2ff;
+            color: #084298;
+        }
+        .badge-aprobado {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        .solicitud-info {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        .solicitud-acciones {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">Yermo y Parres</div>
+        <div class="menu-item">Bandeja de Entrada</div>
+        <div class="menu-item">Enviados</div>
+        <div class="menu-item">Comunicados Generales</div>
+        <div class="menu-item">Configuración</div>
+        <div class="menu-item">Cerrar Sesión</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">Funciones del Portal Docente</div>
+            <div class="user-info">Bienvenido, Sr. Pérez</div>
+        </div>
+
+        <div class="content-area">
+            <div class="function-card verde" onclick="abrirHorario()">
+                <div class="card-header">
+                    <div class="card-category">Gestión Académica</div>
+                    <div class="card-time">Actualizado</div>
+                </div>
+                <div class="card-title">Organización de horarios</div>
+                <div class="card-description">Gestiona y organiza tu horario de clases de manera eficiente con planificación mejorada</div>
+                <button class="btn-action" onclick="event.stopPropagation(); abrirHorario()">Abrir</button>
+            </div>
+
+            <div class="function-card azul" onclick="abrirCirculares()">
+                <div class="card-header">
+                    <div class="card-category">Comunicación Institucional</div>
+                    <div class="card-time">3 nuevas</div>
+                </div>
+                <div class="card-title">Circulares y Avisos</div>
+                <div class="card-description">Consulta circulares oficiales, avisos institucionales y comunicados importantes</div>
+                <button class="btn-action azul" onclick="event.stopPropagation(); abrirCirculares()">Ver circulares</button>
+            </div>
+
+            <div class="function-card naranja" onclick="abrirAdmisiones()">
+                <div class="card-header">
+                    <div class="card-category">Proceso de Admisión</div>
+                    <div class="card-time">5 pendientes</div>
+                </div>
+                <div class="card-title">Solicitudes de Admisión</div>
+                <div class="card-description">Revisa y evalúa solicitudes de nuevos estudiantes para el próximo ciclo escolar</div>
+                <button class="btn-action naranja" onclick="event.stopPropagation(); abrirAdmisiones()">Revisar solicitudes</button>
+            </div>
+
+            <div class="function-card verde" onclick="alert('Accediendo a videos de apoyo...')">
+                <div class="card-header">
+                    <div class="card-category">Recursos Multimedia</div>
+                    <div class="card-time">Disponible</div>
+                </div>
+                <div class="card-title">Videos de apoyo educativo</div>
+                <div class="card-description">Comparte videos didácticos y material de apoyo con tus estudiantes</div>
+                <button class="btn-action" onclick="event.stopPropagation(); alert('Subiendo video...')">Subir video</button>
+            </div>
+
+            <div class="function-card verde" onclick="alert('Accediendo a publicación de resultados...')">
+                <div class="card-header">
+                    <div class="card-category">Evaluaciones</div>
+                    <div class="card-time">Activo</div>
+                </div>
+                <div class="card-title">Publicación de resultados</div>
+                <div class="card-description">Publica calificaciones de exámenes y pruebas de forma rápida y segura</div>
+                <button class="btn-action" onclick="event.stopPropagation(); alert('Publicando resultados...')">Publicar</button>
+            </div>
+
+            <div class="function-card" onclick="alert('Accediendo a búsqueda de libros...')">
+                <div class="card-header">
+                    <div class="card-category">Biblioteca Digital</div>
+                    <div class="card-time">Activo</div>
+                </div>
+                <div class="card-title">Búsqueda avanzada de libros</div>
+                <div class="card-description">Busca y filtra libros por título, autor, categoría o ISBN con disponibilidad en tiempo real</div>
+                <button class="btn-action amarillo" onclick="event.stopPropagation(); alert('Buscando libros...')">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Horario -->
+    <div id="modalHorario" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📅 Organización de Horarios - Semestre Actual</h2>
+                <button class="btn-close" onclick="cerrarHorario()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="acciones-horario">
+                    <button class="btn-agregar" onclick="agregarClase()">➕ Agregar Clase</button>
+                    <button class="btn-agregar btn-secundario" onclick="exportarHorario()">📥 Exportar PDF</button>
+                    <button class="btn-agregar btn-secundario" onclick="compartirHorario()">📤 Compartir</button>
+                    <button class="btn-agregar btn-secundario" onclick="verHistorial()">📋 Historial</button>
+                </div>
+
+                <div class="horario-container">
+                    <table class="horario-table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Lunes</th>
+                                <th>Martes</th>
+                                <th>Miércoles</th>
+                                <th>Jueves</th>
+                                <th>Viernes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>7:00 - 8:00</strong></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Matemáticas</div>
+                                    <div class="clase-grupo">Grupo 3-A</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Matemáticas</div>
+                                    <div class="clase-grupo">Grupo 3-B</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Matemáticas</div>
+                                    <div class="clase-grupo">Grupo 3-A</div>
+                                </div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>8:00 - 9:00</strong></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Álgebra</div>
+                                    <div class="clase-grupo">Grupo 2-A</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Álgebra</div>
+                                    <div class="clase-grupo">Grupo 2-A</div>
+                                </div></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><strong>9:00 - 10:00</strong></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Geometría</div>
+                                    <div class="clase-grupo">Grupo 1-B</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Geometría</div>
+                                    <div class="clase-grupo">Grupo 1-B</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Geometría</div>
+                                    <div class="clase-grupo">Grupo 1-A</div>
+                                </div></td>
+                            </tr>
+                            <tr>
+                                <td><strong>11:00 - 12:00</strong></td>
+                                <td colspan="5" style="background-color: #fff3cd; font-weight: bold;">RECESO</td>
+                            </tr>
+                            <tr>
+                                <td><strong>12:00 - 1:00</strong></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Cálculo</div>
+                                    <div class="clase-grupo">Grupo 4-A</div>
+                                </div></td>
+                                <td></td>
+                                <td><div class="clase" onclick="editarClase(this)">
+                                    <div class="clase-nombre">Cálculo</div>
+                                    <div class="clase-grupo">Grupo 4-A</div>
+                                </div></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Circulares -->
+    <div id="modalCirculares" class="modal">
+        <div class="modal-content">
+            <div class="modal-header azul">
+                <h2>📢 Circulares y Avisos Institucionales</h2>
+                <button class="btn-close" onclick="cerrarCirculares()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="acciones-horario">
+                    <button class="btn-agregar" style="background-color: #3498db;" onclick="nuevaCircular()">➕ Nueva Circular</button>
+                    <button class="btn-agregar btn-secundario" onclick="filtrarCirculares()">🔍 Filtrar</button>
+                    <button class="btn-agregar btn-secundario" onclick="archivarCirculares()">📁 Archivo</button>
+                </div>
+
+                <div class="circular-item">
+                    <div class="circular-header">
+                        <div class="circular-fecha">07 Dic, 2025</div>
+                        <span style="color: #e74c3c; font-weight: bold;">🔴 URGENTE</span>
+                    </div>
+                    <div class="circular-titulo">Suspensión de clases - 10 de diciembre</div>
+                    <div class="circular-contenido">
+                        Se informa a toda la comunidad educativa que las clases del próximo martes 10 de diciembre quedan suspendidas debido a las festividades del día de la virgen de Guadalupe. Las clases se reanudarán normalmente el miércoles 11 de diciembre.
+                    </div>
+                    <div class="circular-acciones">
+                        <button class="btn-pequeño" style="background-color: #3498db; color: white;" onclick="verDetalles('circular1')">Ver detalles</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="descargar('circular1')">Descargar PDF</button>
+                    </div>
+                </div>
+
+                <div class="circular-item">
+                    <div class="circular-header">
+                        <div class="circular-fecha">05 Dic, 2025</div>
+                    </div>
+                    <div class="circular-titulo">Reunión de padres de familia - Diciembre 2025</div>
+                    <div class="circular-contenido">
+                        Cordial saludo. Se les invita a la reunión obligatoria el próximo viernes 13 de diciembre a las 7:00 AM en el auditorio principal. Se tratarán temas sobre el cierre del semestre y entrega de boletas.
+                    </div>
+                    <div class="circular-acciones">
+                        <button class="btn-pequeño" style="background-color: #3498db; color: white;" onclick="verDetalles('circular2')">Ver detalles</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="descargar('circular2')">Descargar PDF</button>
+                    </div>
+                </div>
+
+                <div class="circular-item">
+                    <div class="circular-header">
+                        <div class="circular-fecha">03 Dic, 2025</div>
+                    </div>
+                    <div class="circular-titulo">Actualización del sistema de calificaciones</div>
+                    <div class="circular-contenido">
+                        Se informa que el sistema de calificaciones estará en mantenimiento el día 8 de diciembre de 2:00 AM a 6:00 AM. Durante este tiempo no será posible acceder al módulo de captura de calificaciones.
+                    </div>
+                    <div class="circular-acciones">
+                        <button class="btn-pequeño" style="background-color: #3498db; color: white;" onclick="verDetalles('circular3')">Ver detalles</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="descargar('circular3')">Descargar PDF</button>
+                    </div>
+                </div>
+
+                <div class="circular-item">
+                    <div class="circular-header">
+                        <div class="circular-fecha">01 Dic, 2025</div>
+                    </div>
+                    <div class="circular-titulo">Festival navideño 2025</div>
+                    <div class="circular-contenido">
+                        La institución realizará su tradicional festival navideño el día 18 de diciembre a las 10:00 AM. Se solicita la participación de todos los docentes en la organización y supervisión del evento.
+                    </div>
+                    <div class="circular-acciones">
+                        <button class="btn-pequeño" style="background-color: #3498db; color: white;" onclick="verDetalles('circular4')">Ver detalles</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="descargar('circular4')">Descargar PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Admisiones -->
+    <div id="modalAdmisiones" class="modal">
+        <div class="modal-content">
+            <div class="modal-header naranja">
+                <h2>📋 Solicitudes de Admisión - Ciclo 2026</h2>
+                <button class="btn-close" onclick="cerrarAdmisiones()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="acciones-horario">
+                    <button class="btn-agregar" style="background-color: #ff8c42;" onclick="filtrarSolicitudes()">🔍 Filtrar</button>
+                    <button class="btn-agregar btn-secundario" onclick="exportarSolicitudes()">📥 Exportar Excel</button>
+                    <button class="btn-agregar btn-secundario" onclick="estadisticas()">📊 Estadísticas</button>
+                </div>
+
+                <div class="solicitud-card">
+                    <div class="solicitud-header">
+                        <div class="solicitud-nombre">Ana María González Pérez</div>
+                        <span class="badge-estado badge-pendiente">Pendiente</span>
+                    </div>
+                    <div class="solicitud-info">
+                        <strong>Grado solicitado:</strong> 1° Secundaria | <strong>Fecha:</strong> 05 Dic 2025 | <strong>Promedio:</strong> 9.2
+                    </div>
+                    <div class="solicitud-info">
+                        <strong>Contacto:</strong> ana.gonzalez@email.com | Tel: 555-1234-5678
+                    </div>
+                    <div class="solicitud-acciones">
+                        <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="revisarSolicitud('SOL-001')">Revisar</button>
+                        <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="aprobar('SOL-001')">Aprobar</button>
+                        <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="rechazar('SOL-001')">Rechazar</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-001')">Ver expediente</button>
+                    </div>
+                </div>
+
+                <div class="solicitud-card">
+                    <div class="solicitud-header">
+                        <div class="solicitud-nombre">Carlos Alberto Ramírez López</div>
+                        <span class="badge-estado badge-revision">En Revisión</span>
+                    </div>
+                    <div class="solicitud-info">
+                        <strong>Grado solicitado:</strong> 3° Secundaria | <strong>Fecha:</strong> 04 Dic 2025 | <strong>Promedio:</strong> 8.8
+                    </div>
+                    <div class="solicitud-info">
+                        <strong>Contacto:</strong> carlos.ramirez@email.com | Tel: 555-9876-5432
+                    </div>
+                    <div class="solicitud-acciones">
+                        <button class="btn-pequeño" style="background-color: #ff8c42; color: white;" onclick="revisarSolicitud('SOL-002')">Revisar</button>
+                        <button class="btn-pequeño" style="background-color: #27ae60; color: white;" onclick="aprobar('SOL-002')">Aprobar</button>
+                        <button class="btn-pequeño" style="background-color: #e74c3c; color: white;" onclick="rechazar('SOL-002')">Rechazar</button>
+                        <button class="btn-pequeño" style="background-color: #95a5a6; color: white;" onclick="verExpediente('SOL-002')">Ver expediente</button>
+                    </div>
+                </div

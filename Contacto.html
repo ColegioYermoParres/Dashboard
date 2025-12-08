@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<html>   
+<head>
+<meta charset="UTF-8">
+<title>Contacto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background:#bfe5c8; 
+        font-family: Arial;
+        padding: 20px;
+    }
+
+    .caja {
+        width: 450px;
+        background: white;
+        padding: 20px 25px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+    }
+
+    h2 {
+       color: #e6b800;
+        margin-bottom: 5px;
+        font-size: 22px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        color: #444;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 14px;
+        display: block;
+        margin-top: 15px;
+    }
+
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    textarea {
+        height: 120px;
+        resize: none;
+    }
+
+    .opciones {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .opciones label {
+        margin-right: 15px;
+    }
+
+    .terms {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .terms a {
+        color: #367af6;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    button {
+        margin-top: 20px;
+        background: #f3cc4b;
+        padding: 12px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="caja">
+
+    <h2>CONTACTO</h2>
+    <p>Canal para consultas</p>
+
+    <label>Nombre completo</label>
+    <input type="text" placeholder="Nombre completo">
+
+    <label>Correo electrónico</label>
+    <input type="email" placeholder="Correo electrónico">
+
+    <label>Teléfono</label>
+    <input type="text" placeholder="Número de teléfono">
+
+    <label>Mensaje</label>
+    <textarea placeholder="Escriba su mensaje aquí"></textarea>
+
+    <div class="opciones">
+        <input type="radio" name="rol"> Docente
+        <input type="radio" name="rol"> Acudiente
+        <input type="radio" name="rol"> Estudiante
+    </div>
+
+    <div class="terms">
+        <input type="checkbox"> Acepto los 
+        <a href="#">términos de servicio</a> y 
+        <a href="#">política de privacidad</a>
+    </div>
+
+    <button>Enviar Mensaje</button>
+
+</div>
+
+</body>
+</html>

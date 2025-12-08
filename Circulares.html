@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noticias – Portal Estudiantil</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+    }
+
+    /* MENÚ LATERAL */
+    .sidebar {
+        width: 200px;
+        background: #195c22;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 14px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+    }
+
+    .sidebar a:hover {
+        background: #0f3d17;
+    }
+
+    /* CONTENIDO */
+    .content {
+        margin-left: 200px;
+        padding: 25px;
+    }
+
+    .titulo_pagina {
+        font-size: 23px;
+        font-weight: bold;
+        color: #195c22;
+        margin-bottom: 25px;
+    }
+
+    /* TARJETAS DE NOTICIA */
+    .noticia {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 22px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .noticia h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #195c22;
+        margin-bottom: 6px;
+    }
+
+    .fecha {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    .desc {
+        font-size: 14px;
+        color: #444;
+        max-width: 600px;
+    }
+
+    .boton {
+        background: #195c22;
+        color: white;
+        padding: 8px 18px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 8px;
+    }
+
+    .estado {
+        color: #777;
+        font-size: 14px;
+        text-align: right;
+    }
+</style>
+</head>
+<body>
+
+<!-- MENÚ LATERAL -->
+<div class="sidebar">
+    <h2>Yermo y Parres</h2>
+    <a href="#">Bandeja de Entrada</a>
+    <a href="#">Enviados</a>
+    <a href="#">Comunicados Generales</a>
+    <a href="#">Configuración</a>
+    <a href="#">Cerrar Sesión</a>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="content">
+
+    <div class="titulo_pagina">Noticias Estudiantiles</div>
+
+    <!-- NOTICIA 1 -->
+    <div class="noticia">
+        <div>
+            <h3>Semana Cultural 2025</h3>
+            <div class="fecha">Publicado: 03/12/2025</div>
+            <p class="desc">
+                El colegio anuncia la programación oficial de la Semana Cultural 2025,
+                que contará con presentaciones artísticas, talleres y exposiciones
+                realizadas por los estudiantes.
+            </p>
+        </div>
+        <div>
+            <button class="boton">Leer más</button>
+            <div class="estado">Nueva</div>
+        </div>
+    </div>
+
+    <!-- NOTICIA 2 -->
+    <div class="noticia">
+        <div>
+            <h3>Logros Deportivos</h3>
+            <div class="fecha">Publicado: 01/12/2025</div>
+            <p class="desc">
+                Los equipos deportivos representaron al colegio en los juegos intercolegiados,
+                obteniendo excelentes resultados en atletismo y baloncesto.
+            </p>
+        </div>
+        <div>
+            <button class="boton">Leer más</button>
+            <div class="estado">Actualizado</div>
+        </div>
+    </div>
+
+    <!-- NOTICIA 3 -->
+    <div class="noticia">
+        <div>
+            <h3>Proyecto de Robótica</h3>
+            <div class="fecha">Publicado: 27/11/2025</div>
+            <p class="desc">
+                El semillero de robótica presentó su nuevo prototipo de vehículo autónomo
+                y fue seleccionado para participar en una feria regional de innovación.
+            </p>
+        </div>
+        <div>
+            <button class="boton">Leer más</button>
+            <div class="estado">3 comentarios</div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
